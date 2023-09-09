@@ -88,6 +88,29 @@ const Login = async (req, res) => {
   //Recoger los parametros que llegan del body
   let parametros = req.body;
   console.log(parametros);
+  //Buscar en la base de datos si existe el usuario
+  const userExiste = await User.findOne({ email: parametros.email }).exec();
+
+  const results = userExiste;
+  console.log("soy el resultado", results);
+  if (!results) {
+    return res.status(400).send({
+      status: "Error",
+      message:
+        "no se ha encontrado nigun usuario. Por favor verificar los datos enviados",
+    });
+  }
+  console.log(results);
+  // Comparar la contraseña
+  // Parametros: comparamos la contraseña que viene por parametros y la de la base de datos
+  let pwd = bcrypt.compareSync(parametros.password, results.password);
+
+  if (!pwd) {
+    return res.status(400).send({
+      status: "Error",
+      message: "no se ha identificado correctamente",
+    });
+  }
 
   // Devolver el token
 
@@ -146,121 +169,47 @@ const userPrueba = (req, res) => {
 };
 
 const listadoUser = async (req, res) => {
-  try {
-    // Controlar en que page estamos
-    let page = 1;
-    if (req.params.page) {
-      page = req.params.page;
-    }
-    // Chequeqamos que "PAGE" siempre sea un entero
-    page = parseInt(page);
-
-    // Limitamos el numero de usuario por pagina
-    let itemsPerPage = 5;
-
-    // Consulta con mongoose paginate
-    const userlist = await User.find()
-      .sort("_id")
-      .paginate(page, itemsPerPage)
-      .exec();
-
-    if (!userlist) {
-      return res.status(404).json({
-        status: "Error",
-        message: "No hay usuarios disponibles",
-      });
-    }
-    console.log(user);
-    return res.status(200).json({
-      status: "success",
-      message: "Prueba de usuario existoso",
-      user: userlist,
-      itemsPerPage,
-      total: userlist.length,
-      page,
-      pages: Math.ceil(userlist.length / itemsPerPage),
-    });
-  } catch (error) {
-    return res.status(404).json({
-      status: "Error",
-      message: "No hay usuarios disponibles",
-      error,
-    });
+  // Controlar en que page estamos
+  let page = 1;
+  if (req.params.page) {
+    page = req.params.page;
   }
-};
+  // Chequeqamos que "PAGE" siempre sea un entero
+  page = parseInt(page);
 
-const userUpdate = async (req, res) => {
-  // Recoger la info del usuario a actualizar
-  let userIdentidy = req.user;
+  // Limitamos el numero de usuario por pagina
+  let itemsPerPage = 3;
 
-  // los datos que envia el usuario para actualizar
-  let userUpdate = req.body;
-  console.log(userUpdate);
-  // Eliminar campos sobrantes
-  delete userUpdate.iat;
-  delete userUpdate.exp;
-  delete userUpdate.role;
-  delete userUpdate.image;
-  //Comprobar si el usuario existe
-
-  //Chequear que no vengan usuarios duplicados
-  //or: Condicion que sirve para comparar un valor yse tiene que cumplir una u otra condición
-
-  const updateUser = User.find({
-    $or: [
-      { email: userUpdate.email.toLowerCase() },
-      { nick: userUpdate.nick.toLowerCase() },
-    ],
-  });
-
-  try {
-    const users = await updateUser.exec();
-    console.log("soy el user duplicado", users);
-    // Creamos una variable que inicie en false
-    // luego recorremos el user para comparar que el id
-    // sea distinto al del user a modificar y le damos el valor de true
-    let userIsset = false;
-    users.forEach((user) => {
-      if (users && user._id != userIdentidy.id) userIsset = true;
-    });
-    if (userIsset) {
-      return res.status(200).send({
+  // Consulta con mongoose paginate
+  User.find()
+    .sort("_id")
+    .paginate(page, itemsPerPage)
+    .then((res) => {
+      console.log("Soy la respuesta",res)
+      return res.status(200).json({
         status: "succes",
-        message: "El usuario ya existe",
+        message: "soy la respuetsa",
+        res
       });
-    }
-
-    // Cifrar contraseña
-    // Parametros: primer parametro, el texto que queremos cifrar, segundo las veces que queremos que lo haga
-
-    if (userUpdate.password) {
-      const pwd = await bcrypt.hash(userUpdate.password, 10);
-
-      // Le asignamos a la contraseña el nuevo valor cifrado
-      userUpdate.password = pwd;
-    }
-    // Buscar y actualizar el usuario
-    // Parametros: el id del usuario a actualizar
-    // El objeto a actualizar
-    // y le confirmamos que devuelva el objeto actualizado
-    await User.findByIdAndUpdate(userIdentidy.id, userUpdate, {
-      new: true,
-    }).exec();
-    return res.status(200).json({
-      status: "success",
-      mensaje: "Actualizacion de usuario",
-      user: userUpdate,
+      /*console.log(user);
+      if (error || !user) {
+        return res.status(404).json({
+          status: "Error",
+          message: "No hay usuarios disponibles",
+        });
+      }
+      console.log(userList);
+      return res.status(200).json({
+        status: "success",
+        message: "Prueba de usuario existoso",
+        user: userList,
+        itemsPerPage,
+        total,
+        page,
+        pages: Math.ceil(total / itemsPerPage),
+      });*/
     });
-  } catch (error) {
-    return res.status(400).send({
-      status: "Error",
-      message: "Error al cargar los datos del usuario",
-    });
-  }
 };
-
-
-
 /*const subirImage = (req, res) => {
   // Configurar multer para poder manipular los archivos que querramos subir ("Se configura en el router")
   console.log(req.file);
@@ -379,5 +328,4 @@ module.exports = {
   profileUser,
   userPrueba,
   listadoUser,
-  userUpdate,
 };

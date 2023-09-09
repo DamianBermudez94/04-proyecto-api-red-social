@@ -12,7 +12,7 @@ router.post("/login",userController.Login);
 router.get("/profile/:id",userAuth.auth,userController.profileUser);
 router.get("/prueba-usuario/",userAuth.auth,userController.userPrueba);
 router.get("/listado/:page?",userAuth.auth,userController.listadoUser);
-router.put("/update/",userAuth.auth,userController.userUpdate);
+router.put("/articulo/:id",userController.userUpdate);
 
 /*router.get("/articulos/:ultimos?",userController.obtener);
 

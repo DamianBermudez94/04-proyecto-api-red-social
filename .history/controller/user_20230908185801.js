@@ -88,6 +88,29 @@ const Login = async (req, res) => {
   //Recoger los parametros que llegan del body
   let parametros = req.body;
   console.log(parametros);
+  //Buscar en la base de datos si existe el usuario
+  const userExiste = await User.findOne({ email: parametros.email }).exec();
+
+  const results = userExiste;
+  console.log("soy el resultado", results);
+  if (!results) {
+    return res.status(400).send({
+      status: "Error",
+      message:
+        "no se ha encontrado nigun usuario. Por favor verificar los datos enviados",
+    });
+  }
+  console.log(results);
+  // Comparar la contraseña
+  // Parametros: comparamos la contraseña que viene por parametros y la de la base de datos
+  let pwd = bcrypt.compareSync(parametros.password, results.password);
+
+  if (!pwd) {
+    return res.status(400).send({
+      status: "Error",
+      message: "no se ha identificado correctamente",
+    });
+  }
 
   // Devolver el token
 
@@ -159,10 +182,7 @@ const listadoUser = async (req, res) => {
     let itemsPerPage = 5;
 
     // Consulta con mongoose paginate
-    const userlist = await User.find()
-      .sort("_id")
-      .paginate(page, itemsPerPage)
-      .exec();
+   const userlist = await User.find().sort("_id").paginate(page, itemsPerPage).exec();
 
     if (!userlist) {
       return res.status(404).json({
@@ -170,11 +190,11 @@ const listadoUser = async (req, res) => {
         message: "No hay usuarios disponibles",
       });
     }
-    console.log(user);
+  console.log(user);
     return res.status(200).json({
       status: "success",
       message: "Prueba de usuario existoso",
-      user: userlist,
+      user:userlist,
       itemsPerPage,
       total: userlist.length,
       page,
@@ -184,83 +204,79 @@ const listadoUser = async (req, res) => {
     return res.status(404).json({
       status: "Error",
       message: "No hay usuarios disponibles",
-      error,
+      error
     });
   }
 };
 
-const userUpdate = async (req, res) => {
-  // Recoger la info del usuario a actualizar
-  let userIdentidy = req.user;
 
-  // los datos que envia el usuario para actualizar
-  let userUpdate = req.body;
-  console.log(userUpdate);
-  // Eliminar campos sobrantes
-  delete userUpdate.iat;
-  delete userUpdate.exp;
-  delete userUpdate.role;
-  delete userUpdate.image;
-  //Comprobar si el usuario existe
-
-  //Chequear que no vengan usuarios duplicados
-  //or: Condicion que sirve para comparar un valor yse tiene que cumplir una u otra condición
-
-  const updateUser = User.find({
-    $or: [
-      { email: userUpdate.email.toLowerCase() },
-      { nick: userUpdate.nick.toLowerCase() },
-    ],
-  });
-
-  try {
-    const users = await updateUser.exec();
-    console.log("soy el user duplicado", users);
-    // Creamos una variable que inicie en false
-    // luego recorremos el user para comparar que el id
-    // sea distinto al del user a modificar y le damos el valor de true
-    let userIsset = false;
-    users.forEach((user) => {
-      if (users && user._id != userIdentidy.id) userIsset = true;
+const userUpdate = (req, res) => {
+  // Configurar multer para poder manipular los archivos que querramos subir ("Se configura en el router")
+  console.log(req.file);
+  // Recoger los datos del fichero de las imagenes subidas
+  if (!req.file && !req.files) {
+    return res.status(404).json({
+      status: "error",
+      mensaje: "Petición invalida, por favor verificar subir una imagen",
     });
-    if (userIsset) {
-      return res.status(200).send({
-        status: "succes",
-        message: "El usuario ya existe",
+  }
+  //Obtener el nombre del archivo
+  let nombreArchivo = req.file.originalname;
+  //Obtener la extension del archivo y cortamso el archivo en varias partes para obtner la información requerida
+
+  //Split: Sirve para poder cortar un string en varias parte
+  let archivoSplit = nombreArchivo.split(".");
+  //Obtenemos la posicion del arquivo requerido
+  let archivoExtension = archivoSplit[1];
+
+  //Comprobar extension correcta y eliminamos el archivo no valido
+  if (
+    archivoExtension != "png" &&
+    archivoExtension != "jpg" &&
+    archivoExtension != "jpeg" &&
+    archivoExtension != "gif"
+  ) {
+    // Borrar archivo y dar respuesta
+    // Le pasamos la ruta del arquivo a eliminar
+    fs.unlink(req.file.path, (error) => {
+      return res.status(404).json({
+        status: "error",
+        mensaje: "El archivo subido no es valido, comprobar que sea una imagen",
       });
-    }
-
-    // Cifrar contraseña
-    // Parametros: primer parametro, el texto que queremos cifrar, segundo las veces que queremos que lo haga
-
-    if (userUpdate.password) {
-      const pwd = await bcrypt.hash(userUpdate.password, 10);
-
-      // Le asignamos a la contraseña el nuevo valor cifrado
-      userUpdate.password = pwd;
-    }
-    // Buscar y actualizar el usuario
-    // Parametros: el id del usuario a actualizar
-    // El objeto a actualizar
-    // y le confirmamos que devuelva el objeto actualizado
-    await User.findByIdAndUpdate(userIdentidy.id, userUpdate, {
-      new: true,
-    }).exec();
-    return res.status(200).json({
-      status: "success",
-      mensaje: "Actualizacion de usuario",
-      user: userUpdate,
     });
-  } catch (error) {
-    return res.status(400).send({
-      status: "Error",
-      message: "Error al cargar los datos del usuario",
+  } else {
+    //Actualizar el archivo
+
+    // Recogemos el id de la base de datos
+    let editarId = req.params.id;
+    console.log(editarId);
+
+    // buscamos el elemento ha editar en la base de datos
+    // Metodo findOneAndUpdate: sirve para editar/actulizar un elemento de la base de datos, le pasamos como parametros: el id y el nombre de la imagen a actualizar
+
+    let actulizar = Articulos.findOneAndUpdate(
+      { _id: editarId },
+      { imagen: req.file.filename },
+      {
+        new: true,
+      }
+    ).then((editarArticulo) => {
+      console.log("soy el articulo actualizado", editarArticulo);
+      if (!editarArticulo) {
+        return res.status(400).json({
+          status: "error",
+          mensaje: "No se ha podido actualizar la imagen",
+        });
+      }
+      return res.status(200).json({
+        status: "success",
+        mensaje: "El articulo se ha actualizado correctamente",
+        articulo: editarArticulo,
+        fichero: req.file,
+      });
     });
   }
-};
-
-
-
+}
 /*const subirImage = (req, res) => {
   // Configurar multer para poder manipular los archivos que querramos subir ("Se configura en el router")
   console.log(req.file);
@@ -379,5 +395,5 @@ module.exports = {
   profileUser,
   userPrueba,
   listadoUser,
-  userUpdate,
+  userUpdate
 };

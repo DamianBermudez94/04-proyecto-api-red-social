@@ -88,6 +88,7 @@ const Login = async (req, res) => {
   //Recoger los parametros que llegan del body
   let parametros = req.body;
   console.log(parametros);
+  
 
   // Devolver el token
 
@@ -190,77 +191,19 @@ const listadoUser = async (req, res) => {
 };
 
 const userUpdate = async (req, res) => {
-  // Recoger la info del usuario a actualizar
-  let userIdentidy = req.user;
 
-  // los datos que envia el usuario para actualizar
-  let userUpdate = req.body;
-  console.log(userUpdate);
-  // Eliminar campos sobrantes
-  delete userUpdate.iat;
-  delete userUpdate.exp;
-  delete userUpdate.role;
-  delete userUpdate.image;
-  //Comprobar si el usuario existe
-
-  //Chequear que no vengan usuarios duplicados
-  //or: Condicion que sirve para comparar un valor yse tiene que cumplir una u otra condición
-
-  const updateUser = User.find({
-    $or: [
-      { email: userUpdate.email.toLowerCase() },
-      { nick: userUpdate.nick.toLowerCase() },
-    ],
-  });
-
-  try {
-    const users = await updateUser.exec();
-    console.log("soy el user duplicado", users);
-    // Creamos una variable que inicie en false
-    // luego recorremos el user para comparar que el id
-    // sea distinto al del user a modificar y le damos el valor de true
-    let userIsset = false;
-    users.forEach((user) => {
-      if (users && user._id != userIdentidy.id) userIsset = true;
-    });
-    if (userIsset) {
-      return res.status(200).send({
-        status: "succes",
-        message: "El usuario ya existe",
-      });
-    }
 
     // Cifrar contraseña
-    // Parametros: primer parametro, el texto que queremos cifrar, segundo las veces que queremos que lo haga
+  // Parametros: primer parametro, el texto que queremos cifrar, segundo las veces que queremos que lo haga
+  const pwd = await bcrypt.hash(parametros.password, 10);
 
-    if (userUpdate.password) {
-      const pwd = await bcrypt.hash(userUpdate.password, 10);
-
-      // Le asignamos a la contraseña el nuevo valor cifrado
-      userUpdate.password = pwd;
-    }
-    // Buscar y actualizar el usuario
-    // Parametros: el id del usuario a actualizar
-    // El objeto a actualizar
-    // y le confirmamos que devuelva el objeto actualizado
-    await User.findByIdAndUpdate(userIdentidy.id, userUpdate, {
-      new: true,
-    }).exec();
-    return res.status(200).json({
-      status: "success",
-      mensaje: "Actualizacion de usuario",
-      user: userUpdate,
-    });
-  } catch (error) {
-    return res.status(400).send({
-      status: "Error",
-      message: "Error al cargar los datos del usuario",
-    });
-  }
+  // Le asignamos a la contraseña el nuevo valor cifrado
+  parametros.password = pwd;
+  return res.status(200).json({
+    status: "success",
+    mensaje: "Actualizacion de usuario",
+  });
 };
-
-
-
 /*const subirImage = (req, res) => {
   // Configurar multer para poder manipular los archivos que querramos subir ("Se configura en el router")
   console.log(req.file);

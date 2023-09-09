@@ -216,51 +216,39 @@ const userUpdate = async (req, res) => {
   try {
     const users = await updateUser.exec();
     console.log("soy el user duplicado", users);
-    // Creamos una variable que inicie en false
-    // luego recorremos el user para comparar que el id
-    // sea distinto al del user a modificar y le damos el valor de true
     let userIsset = false;
     users.forEach((user) => {
       if (users && user._id != userIdentidy.id) userIsset = true;
     });
-    if (userIsset) {
+    if (users) {
       return res.status(200).send({
         status: "succes",
         message: "El usuario ya existe",
       });
     }
-
-    // Cifrar contraseña
-    // Parametros: primer parametro, el texto que queremos cifrar, segundo las veces que queremos que lo haga
-
-    if (userUpdate.password) {
-      const pwd = await bcrypt.hash(userUpdate.password, 10);
-
-      // Le asignamos a la contraseña el nuevo valor cifrado
-      userUpdate.password = pwd;
-    }
-    // Buscar y actualizar el usuario
-    // Parametros: el id del usuario a actualizar
-    // El objeto a actualizar
-    // y le confirmamos que devuelva el objeto actualizado
-    await User.findByIdAndUpdate(userIdentidy.id, userUpdate, {
-      new: true,
-    }).exec();
-    return res.status(200).json({
-      status: "success",
-      mensaje: "Actualizacion de usuario",
-      user: userUpdate,
-    });
   } catch (error) {
     return res.status(400).send({
       status: "Error",
       message: "Error al cargar los datos del usuario",
     });
   }
+
+  // Cifrar contraseña
+  // Parametros: primer parametro, el texto que queremos cifrar, segundo las veces que queremos que lo haga
+
+  if (userUpdate.password) {
+    const pwd = await bcrypt.hash(userUpdate.password, 10);
+
+    // Le asignamos a la contraseña el nuevo valor cifrado
+    userUpdate.password = pwd;
+  }
+  // Buscar y actualizar el usuario
+  return res.status(200).json({
+    status: "success",
+    mensaje: "Actualizacion de usuario",
+    user: userUpdate,
+  });
 };
-
-
-
 /*const subirImage = (req, res) => {
   // Configurar multer para poder manipular los archivos que querramos subir ("Se configura en el router")
   console.log(req.file);
