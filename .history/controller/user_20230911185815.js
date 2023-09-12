@@ -261,11 +261,6 @@ const userUpdate = async (req, res) => {
 
 
 
-
-
-
-
-
 const upLoad = (req, res) => {
   // Configurar multer para poder manipular los archivos que querramos subir ("Se configura en el router")
   console.log(req.file);
@@ -305,7 +300,7 @@ const upLoad = (req, res) => {
 
     // Recogemos el id de la base de datos
     let editarId = req.params.id;
-    console.log("holaaaa",editarId);
+    console.log(editarId);
 
     // buscamos el elemento ha editar en la base de datos
     // Metodo findOneAndUpdate: sirve para editar/actulizar un elemento de la base de datos, le pasamos como parametros: el id y el nombre de la imagen a actualizar
@@ -334,12 +329,11 @@ const upLoad = (req, res) => {
   }
 };
 
-
-const upDateImage = (req, res) => {
+/*const mostrarImagen = (req, res) => {
   // Recibimos por parametros los datos del fichero
   let fichero = req.params.fichero;
   console.log("Soy el fichero", fichero);
-  let rutaFisica = "./uploads/avatars/" + fichero;
+  let rutaFisica = "./imagenes/articulos/" + fichero;
   console.log("ruta fisica", rutaFisica);
   fs.stat(rutaFisica, (error, existe) => {
     if (existe) {
@@ -352,9 +346,8 @@ const upDateImage = (req, res) => {
       });
     }
   });
-}
-
-/*const buscarArticulos = async (req, res) => {
+};
+const buscarArticulos = async (req, res) => {
   // Sacar el string de busqueda de la ruta
   let parametroBuscador = req.params.busqueda;
 
@@ -380,7 +373,6 @@ const upDateImage = (req, res) => {
     });
 
 }*/
-
 module.exports = {
   crearUser,
   Login,
@@ -388,6 +380,5 @@ module.exports = {
   userPrueba,
   listadoUser,
   userUpdate,
-  upLoad,
-  upDateImage
+  upLoad
 };

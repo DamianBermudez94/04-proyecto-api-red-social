@@ -337,9 +337,12 @@ const upLoad = (req, res) => {
 
 const upDateImage = (req, res) => {
   // Recibimos por parametros los datos del fichero
-  let fichero = req.params.fichero;
-  console.log("Soy el fichero", fichero);
-  let rutaFisica = "./uploads/avatars/" + fichero;
+
+  return res.status(400).json({
+    status: "error",
+    mensaje: "La imagen no existe",
+  });
+  /*let rutaFisica = "./uploads/avatars/" + fichero;
   console.log("ruta fisica", rutaFisica);
   fs.stat(rutaFisica, (error, existe) => {
     if (existe) {
@@ -351,7 +354,7 @@ const upDateImage = (req, res) => {
         mensaje: "La imagen no existe",
       });
     }
-  });
+  });*/
 }
 
 /*const buscarArticulos = async (req, res) => {

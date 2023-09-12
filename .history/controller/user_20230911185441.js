@@ -261,14 +261,16 @@ const userUpdate = async (req, res) => {
 
 
 
-
-
-
-
-
 const upLoad = (req, res) => {
   // Configurar multer para poder manipular los archivos que querramos subir ("Se configura en el router")
-  console.log(req.file);
+  
+  return res.status(200).json({
+    status: "error",
+    mensaje: "Petición invalida, por favor verificar subir una imagen",
+    user: req.user,
+    file:req.file,
+    files:req.files
+  });
   // Recoger los datos del fichero de las imagenes subidas
   if (!req.file && !req.files) {
     return res.status(404).json({
@@ -293,7 +295,7 @@ const upLoad = (req, res) => {
     archivoExtension != "gif"
   ) {
     // Borrar archivo y dar respuesta
-    // Le pasamos la ruta del archivo a eliminar
+    // Le pasamos la ruta del arquivo a eliminar
     fs.unlink(req.file.path, (error) => {
       return res.status(404).json({
         status: "error",
@@ -305,20 +307,20 @@ const upLoad = (req, res) => {
 
     // Recogemos el id de la base de datos
     let editarId = req.params.id;
-    console.log("holaaaa",editarId);
+    console.log(editarId);
 
     // buscamos el elemento ha editar en la base de datos
     // Metodo findOneAndUpdate: sirve para editar/actulizar un elemento de la base de datos, le pasamos como parametros: el id y el nombre de la imagen a actualizar
 
-    let actulizar = User.findOneAndUpdate(
+    let actulizar = Articulos.findOneAndUpdate(
       { _id: editarId },
       { imagen: req.file.filename },
       {
         new: true,
       }
-    ).then((editarImage) => {
-      console.log("soy el articulo actualizado", editarImage);
-      if (!editarImage) {
+    ).then((editarArticulo) => {
+      console.log("soy el articulo actualizado", editarArticulo);
+      if (!editarArticulo) {
         return res.status(400).json({
           status: "error",
           mensaje: "No se ha podido actualizar la imagen",
@@ -327,19 +329,18 @@ const upLoad = (req, res) => {
       return res.status(200).json({
         status: "success",
         mensaje: "El articulo se ha actualizado correctamente",
-        user: editarImage,
+        articulo: editarArticulo,
         fichero: req.file,
       });
     });
   }
 };
 
-
-const upDateImage = (req, res) => {
+/*const mostrarImagen = (req, res) => {
   // Recibimos por parametros los datos del fichero
   let fichero = req.params.fichero;
   console.log("Soy el fichero", fichero);
-  let rutaFisica = "./uploads/avatars/" + fichero;
+  let rutaFisica = "./imagenes/articulos/" + fichero;
   console.log("ruta fisica", rutaFisica);
   fs.stat(rutaFisica, (error, existe) => {
     if (existe) {
@@ -352,9 +353,8 @@ const upDateImage = (req, res) => {
       });
     }
   });
-}
-
-/*const buscarArticulos = async (req, res) => {
+};
+const buscarArticulos = async (req, res) => {
   // Sacar el string de busqueda de la ruta
   let parametroBuscador = req.params.busqueda;
 
@@ -380,7 +380,6 @@ const upDateImage = (req, res) => {
     });
 
 }*/
-
 module.exports = {
   crearUser,
   Login,
@@ -388,6 +387,5 @@ module.exports = {
   userPrueba,
   listadoUser,
   userUpdate,
-  upLoad,
-  upDateImage
+  upLoad
 };

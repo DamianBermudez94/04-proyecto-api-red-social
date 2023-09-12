@@ -334,8 +334,8 @@ const upLoad = (req, res) => {
   }
 };
 
-
-const upDateImage = (req, res) => {
+/*
+const upLoad = (req, res) => {
   // Recibimos por parametros los datos del fichero
   let fichero = req.params.fichero;
   console.log("Soy el fichero", fichero);
@@ -352,9 +352,7 @@ const upDateImage = (req, res) => {
       });
     }
   });
-}
-
-/*const buscarArticulos = async (req, res) => {
+};const buscarArticulos = async (req, res) => {
   // Sacar el string de busqueda de la ruta
   let parametroBuscador = req.params.busqueda;
 
@@ -388,6 +386,5 @@ module.exports = {
   userPrueba,
   listadoUser,
   userUpdate,
-  upLoad,
-  upDateImage
+  upLoad
 };

@@ -33,7 +33,7 @@ router.get("/prueba-usuario/",userAuth.auth,userController.userPrueba);
 router.get("/listado/:page?",userAuth.auth,userController.listadoUser);
 router.put("/update/",userAuth.auth,userController.userUpdate);
 router.post("/upload/:id",[userAuth.auth,uploads.single("file0")],userController.upLoad)
-router.get("/uploads/:fichero",userAuth.auth,userController.upDateImage);
+router.get("/imagen/:fichero",userAuth.auth,userController.upDateImage);
 
 
 

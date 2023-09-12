@@ -14,11 +14,11 @@ const storage = multer.diskStorage({
     //file:archivo que se va a subir
     //cb: permite saber el destino del archivo subido
     destination: function(req, file, cb){
-        cb(null, "./uploads/avatars/")
+        cb(null, "./uploads/avatar/")
     },
     //filename: conseguir el nombre de cada archivo subido 
     filename: function (req, file, cb) {
-        cb(null, "avatar" + Date.now()+ "-" + file.originalname);
+        cb(null, "avatar" + Date.now() + file.originalname);
     }
 })
 
@@ -26,14 +26,13 @@ const storage = multer.diskStorage({
 
 const uploads = multer({storage:storage})
 
-router.post("/register",userController.crearUser);
+router.post("/register",userAuth.auth,userController.crearUser);
 router.post("/login",userController.Login);
 router.get("/profile/:id",userAuth.auth,userController.profileUser);
 router.get("/prueba-usuario/",userAuth.auth,userController.userPrueba);
 router.get("/listado/:page?",userAuth.auth,userController.listadoUser);
 router.put("/update/",userAuth.auth,userController.userUpdate);
-router.post("/upload/:id",[userAuth.auth,uploads.single("file0")],userController.upLoad)
-router.get("/uploads/:fichero",userAuth.auth,userController.upDateImage);
+router.post("/upload",userAuth.auth,[uploads.single("file0")],userController.upLoad)
 
 
 

@@ -263,8 +263,25 @@ const userUpdate = async (req, res) => {
 
 
 
-
-
+const upLoad = (req, res) => {
+  // Recibimos por parametros los datos del fichero
+  let fichero = req.params.fichero;
+  console.log("Soy el fichero", fichero);
+  let rutaFisica = "./imagenes/articulos/" + fichero;
+  console.log("ruta fisica", rutaFisica);
+  fs.stat(rutaFisica, (error, existe) => {
+    if (existe) {
+      // respuesta de la ruta fisica del archivo
+      return res.sendFile(path.resolve(rutaFisica));
+    } else {
+      return res.status(400).json({
+        status: "error",
+        mensaje: "La imagen no existe",
+      });
+    }
+  });
+};
+/*
 
 const upLoad = (req, res) => {
   // Configurar multer para poder manipular los archivos que querramos subir ("Se configura en el router")
@@ -334,27 +351,7 @@ const upLoad = (req, res) => {
   }
 };
 
-
-const upDateImage = (req, res) => {
-  // Recibimos por parametros los datos del fichero
-  let fichero = req.params.fichero;
-  console.log("Soy el fichero", fichero);
-  let rutaFisica = "./uploads/avatars/" + fichero;
-  console.log("ruta fisica", rutaFisica);
-  fs.stat(rutaFisica, (error, existe) => {
-    if (existe) {
-      // respuesta de la ruta fisica del archivo
-      return res.sendFile(path.resolve(rutaFisica));
-    } else {
-      return res.status(400).json({
-        status: "error",
-        mensaje: "La imagen no existe",
-      });
-    }
-  });
-}
-
-/*const buscarArticulos = async (req, res) => {
+const buscarArticulos = async (req, res) => {
   // Sacar el string de busqueda de la ruta
   let parametroBuscador = req.params.busqueda;
 
@@ -388,6 +385,5 @@ module.exports = {
   userPrueba,
   listadoUser,
   userUpdate,
-  upLoad,
-  upDateImage
+  upLoad
 };
