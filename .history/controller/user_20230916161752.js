@@ -235,7 +235,7 @@ const userUpdate = async (req, res) => {
       if (users && user._id != userIdentidy.id) userIsset = true;
     });
     if (userIsset) {
-      console.log("hola",userIsset);
+      console.log(userIsset);
       return res.status(200).send({
         status: "succes",
         message: "El usuario ya existe",

@@ -206,7 +206,7 @@ const userUpdate = async (req, res) => {
 
   // los datos que envia el usuario para actualizar
   let userUpdate = req.body;
-
+  console.log(userUpdate);
   // Eliminar campos sobrantes
   delete userUpdate.iat;
   delete userUpdate.exp;
@@ -226,7 +226,7 @@ const userUpdate = async (req, res) => {
 
   try {
     const users = await updateUser.exec();
-  console.log("hola",users);
+    console.log("soy el user duplicado", users);
     // Creamos una variable que inicie en false
     // luego recorremos el user para comparar que el id
     // sea distinto al del user a modificar y le damos el valor de true
@@ -235,7 +235,6 @@ const userUpdate = async (req, res) => {
       if (users && user._id != userIdentidy.id) userIsset = true;
     });
     if (userIsset) {
-      console.log("hola",userIsset);
       return res.status(200).send({
         status: "succes",
         message: "El usuario ya existe",
@@ -280,7 +279,7 @@ const userUpdate = async (req, res) => {
 
 const upLoad = async (req, res) => {
   // Configurar multer para poder manipular los archivos que querramos subir ("Se configura en el router")
-
+  console.log(req.file);
   // Recoger los datos del fichero de las imagenes subidas
   if (!req.file && !req.files) {
     return res.status(404).json({
@@ -312,35 +311,24 @@ const upLoad = async (req, res) => {
         mensaje: "El archivo subido no es valido, comprobar que sea una imagen",
       });
     });
-  } 
+  } else {
     //Actualizar el archivo
 
+    // Recogemos el id de la base de datos
+    let editarId = req.params.id;
+    console.log("holaaaa",editarId);
 
     // buscamos el elemento ha editar en la base de datos
     // Metodo findOneAndUpdate: sirve para editar/actulizar un elemento de la base de datos, le pasamos como parametros: el id y el nombre de la imagen a actualizar
 
-    let userUpdate = await User.findOneAndUpdate(
-      {_id:req.user.id},
+    let actulizar = await User.findOneAndUpdate(
+      {},
       { imagen: req.file.filename },
       {
         new: true,
       }
     ).exec();
-   
-      console.log("soy el articulo actualizado", userUpdate);
-      if (!userUpdate) {
-        return res.status(400).json({
-          status: "error",
-          mensaje: "No se ha podido actualizar la imagen",
-        });
-      }
-      return res.status(200).json({
-        status: "success",
-        mensaje: "El articulo se ha actualizado correctamente",
-        user: userUpdate,
-        fichero: req.file,
-      });
-  
+  }
 };
 
 

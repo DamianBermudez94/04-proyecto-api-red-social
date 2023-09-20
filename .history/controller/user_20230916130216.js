@@ -206,7 +206,7 @@ const userUpdate = async (req, res) => {
 
   // los datos que envia el usuario para actualizar
   let userUpdate = req.body;
-
+  console.log(userUpdate);
   // Eliminar campos sobrantes
   delete userUpdate.iat;
   delete userUpdate.exp;
@@ -226,7 +226,7 @@ const userUpdate = async (req, res) => {
 
   try {
     const users = await updateUser.exec();
-  console.log("hola",users);
+    console.log("soy el user duplicado", users);
     // Creamos una variable que inicie en false
     // luego recorremos el user para comparar que el id
     // sea distinto al del user a modificar y le damos el valor de true
@@ -235,7 +235,6 @@ const userUpdate = async (req, res) => {
       if (users && user._id != userIdentidy.id) userIsset = true;
     });
     if (userIsset) {
-      console.log("hola",userIsset);
       return res.status(200).send({
         status: "succes",
         message: "El usuario ya existe",

@@ -90,16 +90,16 @@ const Login = async (req, res) => {
   let parametros = req.body;
   if (!parametros.email || !parametros.password) {
     return res
-    .status(500)
-    .send({ error: "error", message: "Faltan datos por enviar" });
+      .status(500)
+      .send({ error: "error", message: "Faltan datos por enviar" });
   }
-// Buscar en la Base de datos si existe el usuario
-let user = await User.findOne({email:parametros.email}).exec()
-console.log(user);
+  // Buscar en la Base de datos si existe el usuario
+  let user = await User.findOne({ email: parametros.email }).exec();
+  console.log(user);
   if (!user) {
     return res
-    .status(500)
-    .send({ error: "error", message: "No existe el usuario" });
+      .status(500)
+      .send({ error: "error", message: "No existe el usuario" });
   }
   // Devolver el token
   token = jwt.createToken(parametros);
@@ -107,9 +107,9 @@ console.log(user);
     status: "success",
     message: "Login",
     user: {
-      id:user.id,
+      id: user.id,
       name: user.name,
-      nick:user.name,
+      nick: user.nick,
     },
     token,
   });
@@ -206,7 +206,7 @@ const userUpdate = async (req, res) => {
 
   // los datos que envia el usuario para actualizar
   let userUpdate = req.body;
-
+  console.log(userUpdate);
   // Eliminar campos sobrantes
   delete userUpdate.iat;
   delete userUpdate.exp;
@@ -226,7 +226,7 @@ const userUpdate = async (req, res) => {
 
   try {
     const users = await updateUser.exec();
-  console.log("hola",users);
+    console.log("soy el user duplicado", users);
     // Creamos una variable que inicie en false
     // luego recorremos el user para comparar que el id
     // sea distinto al del user a modificar y le damos el valor de true
@@ -235,7 +235,6 @@ const userUpdate = async (req, res) => {
       if (users && user._id != userIdentidy.id) userIsset = true;
     });
     if (userIsset) {
-      console.log("hola",userIsset);
       return res.status(200).send({
         status: "succes",
         message: "El usuario ya existe",
@@ -270,13 +269,6 @@ const userUpdate = async (req, res) => {
     });
   }
 };
-
-
-
-
-
-
-
 
 const upLoad = async (req, res) => {
   // Configurar multer para poder manipular los archivos que querramos subir ("Se configura en el router")
@@ -315,34 +307,31 @@ const upLoad = async (req, res) => {
   } 
     //Actualizar el archivo
 
-
     // buscamos el elemento ha editar en la base de datos
     // Metodo findOneAndUpdate: sirve para editar/actulizar un elemento de la base de datos, le pasamos como parametros: el id y el nombre de la imagen a actualizar
 
     let userUpdate = await User.findOneAndUpdate(
-      {_id:req.user.id},
-      { imagen: req.file.filename },
+      { _id:  req.user.id },
+      { image: req.file.filename },
       {
         new: true,
       }
     ).exec();
-   
-      console.log("soy el articulo actualizado", userUpdate);
-      if (!userUpdate) {
-        return res.status(400).json({
-          status: "error",
-          mensaje: "No se ha podido actualizar la imagen",
-        });
-      }
-      return res.status(200).json({
-        status: "success",
-        mensaje: "El articulo se ha actualizado correctamente",
-        user: userUpdate,
-        fichero: req.file,
+
+    if (!userUpdate) {
+      return res.status(400).json({
+        status: "error",
+        mensaje: "No se ha podido actualizar la imagen",
       });
+    }
+    return res.status(200).json({
+      status: "success",
+      mensaje: "El articulo se ha actualizado correctamente",
+      user: userUpdate,
+      fichero: req.file,
+    });
   
 };
-
 
 const upDateImage = (req, res) => {
   // Recibimos por parametros los datos del fichero
@@ -361,7 +350,7 @@ const upDateImage = (req, res) => {
       });
     }
   });
-}
+};
 
 /*const buscarArticulos = async (req, res) => {
   // Sacar el string de busqueda de la ruta
@@ -398,5 +387,5 @@ module.exports = {
   listadoUser,
   userUpdate,
   upLoad,
-  upDateImage
+  upDateImage,
 };
