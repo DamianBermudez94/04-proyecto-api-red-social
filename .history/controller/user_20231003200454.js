@@ -106,7 +106,7 @@ const Login = async (req, res) => {
   }
   // Buscar en la Base de datos si existe el usuario
   let user = await User.findOne({ email: params.email }).exec();
-  console.log("Hola! soy el user", user);
+  console.log("Hola! soy el user",user);
   if (!user) {
     return res
       .status(500)
@@ -115,15 +115,17 @@ const Login = async (req, res) => {
 
   const pwd = bcrypt.compareSync(params.password, user.password);
   if (!pwd) {
-    return res.status(500).send({
-      error: "error",
-      message: "No te has identificado correctamente",
-    });
+    return res
+      .status(500)
+      .send({
+        error: "error",
+        message: "No te has identificado correctamente",
+      });
   }
 
   // Devolver el token
   token = jwt.createToken(user);
-  console.log("soy el token", token);
+  console.log("soy el token",token);
   return res.status(200).send({
     status: "success",
     message: "Login",
@@ -132,21 +134,21 @@ const Login = async (req, res) => {
       name: user.name,
       nick: user.name,
     },
-    token,
+    token
   });
 };
 
 const profileUser = async (req, res) => {
   try {
-    //Buscar el id en la base de datos
-    let id = req.params.id;
+  //Buscar el id en la base de datos
+  let id = req.params.id;
 
-    //Consulta para sacar el perfil del usuario
-    const userProfile = await User.findById(id).select({
-      password: 0,
-      role: 0,
-    });
-
+  //Consulta para sacar el perfil del usuario
+  const userProfile = await User.findById(id).select({
+    password: 0,
+    role: 0,
+  });
+  
     if (!userProfile) {
       return res.status(400).json({
         status: "error",
@@ -156,13 +158,12 @@ const profileUser = async (req, res) => {
 
     // info de seguimiento
     // como parametros le pasamos el id del usuario logueado y el id del perfil del usuario
-    const followInfo = await followServicie.followThisUser(req.user.id, id);
-
+    const followInfo = await followServicie.followThisUser(req.user.id,id)
+    console.log(followInfo);
     return res.status(200).json({
       status: "success",
       user: userProfile,
-      following: followInfo.following,
-      followers: followInfo.follower,
+      followInfo
     });
   } catch (error) {
     return res.status(400).json({
@@ -199,8 +200,6 @@ const listadoUser = async (req, res) => {
       });
     }
 
-    let followUserIds = await followServicie.followUserIds(req.user.id);
-
     return res.status(200).json({
       status: "success",
       message: "Prueba de usuario existoso",
@@ -209,8 +208,6 @@ const listadoUser = async (req, res) => {
       total: userlist.length,
       page,
       pages: Math.ceil(userlist.length / itemsPerPage),
-      user_following: followUserIds.following,
-      user_follow_me: followUserIds.followers,
     });
   } catch (error) {
     return res.status(404).json({

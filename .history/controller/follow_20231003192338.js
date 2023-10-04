@@ -146,7 +146,7 @@ const listadoFollow = async (req, res) => {
       page,
       pages: Math.ceil(followlist.length / itemsPerPage),
       user_following: followUserIds.following,
-      user_follow_me:followUserIds.followers
+      user_follow:followUserIds.followers
     });
   } catch (error) {
     return res.status(404).json({

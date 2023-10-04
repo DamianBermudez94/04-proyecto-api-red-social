@@ -6,7 +6,6 @@ const fs = require("fs");
 // Libreria que me permite cargar un ruta especifica
 const path = require("path");
 
-const followServicie = require("../helper/FollowServices")
 
 const flatted = require('flatted');
 /*Pasos a seguir para crear las funcionalidades del controller 
@@ -136,7 +135,7 @@ const listadoFollow = async (req, res) => {
         message: "No hay usuarios disponibles",
       });
     }
-    let followUserIds = await followServicie.followUserIds(req.user.id)
+
     return res.status(200).json({
       status: "success",
       message: "Prueba de usuario existoso",
@@ -145,8 +144,6 @@ const listadoFollow = async (req, res) => {
       total: followlist.length,
       page,
       pages: Math.ceil(followlist.length / itemsPerPage),
-      user_following: followUserIds.following,
-      user_follow_me:followUserIds.followers
     });
   } catch (error) {
     return res.status(404).json({
