@@ -189,16 +189,15 @@ const followers = async (req,res)=>{
         message: "No hay usuarios disponibles",
       });
     }
-    // Sacar un array de ids de los usuarios que me siguen y los que sigo con el usuario logueado
     let followUserIds = await followServicie.followUserIds(req.user.id);
 
     return res.status(200).json({
       status: "success",
       message: "Lista de usuarios que me siguen",
       followlist,
-  
+      itemsPerPage,
       total: followlist.length,
-  
+      page,
       pages: Math.ceil(followlist.length / itemsPerPage),
       user_following: followUserIds.following,
       user_follow_me:followUserIds.followers

@@ -91,7 +91,12 @@ const deletePublication = async (req, res) => {
       {"user":req.user.id, "_id":publicationId}
     ).deleteMany();
 
-
+    if (!deletePublication) {
+      return res.status(500).json({
+        status: "Error",
+        mensaje: "Error!!! No has dejado de seguir correctamente al usuario ",
+      });
+    }
 
     return res.status(200).json({
       status: "success",

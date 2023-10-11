@@ -126,8 +126,6 @@ const listadoFollow = async (req, res) => {
     let itemsPerPage = 5;
 
     // Consulta con mongoose paginate
-
-    // Como parametro le pasamos UserId ( usuario logueado )
     const followlist = await Follow.find({user:userId})
       .populate("user followed","-password -role -__v")
       .exec();
@@ -178,8 +176,7 @@ const followers = async (req,res)=>{
     let itemsPerPage = 5;
 
     // Consulta con mongoose paginate
-    // Como parametro le pasamos el followed ( usuario que me sigue )
-    const followlist = await Follow.find({followed:userId})
+    const followlist = await Follow.find({user:userId})
       .populate("user","-password -role -__v")
       .exec();
     
@@ -189,16 +186,14 @@ const followers = async (req,res)=>{
         message: "No hay usuarios disponibles",
       });
     }
-    // Sacar un array de ids de los usuarios que me siguen y los que sigo con el usuario logueado
-    let followUserIds = await followServicie.followUserIds(req.user.id);
-
+    let followUserIds = await followServicie.followUserIds(req.user.id)
     return res.status(200).json({
       status: "success",
-      message: "Lista de usuarios que me siguen",
+      message: "Prueba de usuario existoso",
       followlist,
-  
+      itemsPerPage,
       total: followlist.length,
-  
+      page,
       pages: Math.ceil(followlist.length / itemsPerPage),
       user_following: followUserIds.following,
       user_follow_me:followUserIds.followers
@@ -216,6 +211,5 @@ module.exports = {
   pruebaFollow,
   save,
   unfollow,
-  listadoFollow,
-  followers
+  listadoFollow
 };

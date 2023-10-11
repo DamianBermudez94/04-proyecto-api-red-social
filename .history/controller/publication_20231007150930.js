@@ -83,20 +83,27 @@ const deletePublication = async (req, res) => {
   try {
     // Obtener el id del usuario logueado
     let publicationId = req.params.id;
-    console.log("ID de la publicacion", publicationId);
+    console.log("ID del usuario logueado", userId);
 
-    
+    // Obtener el id del usuario que sigo y quiero dejar de seguir
+    const followId = req.params.id;
 
-    const deletePublication = await Publication.find(
-      {"user":req.user.id, "_id":publicationId}
-    ).deleteMany();
+    const followDelete = await Follow.find({
+      user: userId,
+      followed: followId,
+    }).deleteMany();
 
-
+    if (!followDelete) {
+      return res.status(500).json({
+        status: "Error",
+        mensaje: "Error!!! No has dejado de seguir correctamente al usuario ",
+      });
+    }
 
     return res.status(200).json({
       status: "success",
-      mensaje: "Has eliminado correctamente la publicación",
-      deletePublication
+      mensaje: "Has dejado de seguir correctamente al usuario ",
+      unfollow: followDelete,
     });
   } catch (error) {
     return res.status(404).json({

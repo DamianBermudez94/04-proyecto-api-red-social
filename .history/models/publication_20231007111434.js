@@ -6,7 +6,7 @@ const PublicationSchema = Schema({
         ref:"user"
     },
     text:{
-        type: String,
+        type: Schema.String,
         require: true
     },
     file:String,

@@ -4,11 +4,11 @@ const router = express.Router();
 
 // Exportamos los controllers
 const publicatiionController = require("../controller/publication");
-const userAuth = require("../middleware/auth");
-
+const userAuth = require("../middleware/auth")
 router.post("/save",userAuth.auth,publicatiionController.save);
-router.get("/detail/:id",userAuth.auth,publicatiionController.detail);
-router.delete("/delete/:id",publicatiionController.deletePublication);
+
+router.get("/detail/:ultimos?",userAuth.auth,publicatiionController.detail);
+
 
 /*router.get("/articulo/:id",userController.filtrar);
 router.delete("/articulo/:id",userController.borrarArticulo);

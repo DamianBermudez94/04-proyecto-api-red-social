@@ -87,16 +87,21 @@ const deletePublication = async (req, res) => {
 
     
 
-    const deletePublication = await Publication.find(
-      {"user":req.user.id, "_id":publicationId}
+    const deletePublication = await Publication.findById(
+      publicationId
     ).deleteMany();
 
-
+    if (!deletePublication) {
+      return res.status(500).json({
+        status: "Error",
+        mensaje: "Error!!! No has dejado de seguir correctamente al usuario ",
+      });
+    }
 
     return res.status(200).json({
       status: "success",
-      mensaje: "Has eliminado correctamente la publicación",
-      deletePublication
+      mensaje: "Has dejado de seguir correctamente al usuario ",
+      unfollow: followDelete,
     });
   } catch (error) {
     return res.status(404).json({

@@ -6,7 +6,7 @@ const PublicationSchema = Schema({
         ref:"user"
     },
     text:{
-        type: String,
+        type: Schema.String,
         require: true
     },
     file:String,
@@ -16,4 +16,4 @@ const PublicationSchema = Schema({
     }
    
 })
-module.exports = model("Publication",PublicationSchema, "publications");
+module.exports = model("Publication",PublicationSchema, "publication");

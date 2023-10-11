@@ -8,7 +8,7 @@ const userAuth = require("../middleware/auth");
 
 router.post("/save",userAuth.auth,publicatiionController.save);
 router.get("/detail/:id",userAuth.auth,publicatiionController.detail);
-router.delete("/delete/:id",publicatiionController.deletePublication);
+router.delete("/delete/:id",userController.borrarArticulo);
 
 /*router.get("/articulo/:id",userController.filtrar);
 router.delete("/articulo/:id",userController.borrarArticulo);

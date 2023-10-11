@@ -4,13 +4,11 @@ const router = express.Router();
 
 // Exportamos los controllers
 const publicatiionController = require("../controller/publication");
-const userAuth = require("../middleware/auth");
+const userAuth = require("../middleware/auth")
+router.post("/publication",publicatiionController.pruebaPublication);
 
-router.post("/save",userAuth.auth,publicatiionController.save);
-router.get("/detail/:id",userAuth.auth,publicatiionController.detail);
-router.delete("/delete/:id",publicatiionController.deletePublication);
-
-/*router.get("/articulo/:id",userController.filtrar);
+/*router.get("/articulos/:ultimos?",userController.obtener);
+router.get("/articulo/:id",userController.filtrar);
 router.delete("/articulo/:id",userController.borrarArticulo);
 router.put("/articulo/:id",userController.editar);
 router.post("/subir-imagen/:id",[userController.single("file0")],userController.subirImage);

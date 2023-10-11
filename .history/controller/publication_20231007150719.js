@@ -59,7 +59,7 @@ const detail = async (req, res) => {
   try {
     // Sacar el id de la publicacion de la url
     let publicationId = req.params.id;
-
+ 
     // Find con la condicion del id
     let publicacion = await Publication.findById(publicationId);
 
@@ -77,26 +77,21 @@ const detail = async (req, res) => {
   }
 };
 
+
 //* mostrar publicacion
 
 const deletePublication = async (req, res) => {
   try {
-    // Obtener el id del usuario logueado
+    // Sacar el id de la publicacion de la url
     let publicationId = req.params.id;
-    console.log("ID de la publicacion", publicationId);
-
-    
-
-    const deletePublication = await Publication.find(
-      {"user":req.user.id, "_id":publicationId}
-    ).deleteMany();
-
-
+ 
+    // Find con la condicion del id
+    let publicacion = await Publication.findById(publicationId);
 
     return res.status(200).json({
       status: "success",
-      mensaje: "Has eliminado correctamente la publicación",
-      deletePublication
+      mensaje: "mostrar publicaion",
+      publicacion,
     });
   } catch (error) {
     return res.status(404).json({
@@ -110,5 +105,5 @@ const deletePublication = async (req, res) => {
 module.exports = {
   save,
   detail,
-  deletePublication,
+  deletePublication
 };

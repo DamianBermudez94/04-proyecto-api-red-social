@@ -196,9 +196,9 @@ const followers = async (req,res)=>{
       status: "success",
       message: "Lista de usuarios que me siguen",
       followlist,
-  
+      itemsPerPage,
       total: followlist.length,
-  
+      page,
       pages: Math.ceil(followlist.length / itemsPerPage),
       user_following: followUserIds.following,
       user_follow_me:followUserIds.followers
