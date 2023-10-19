@@ -224,11 +224,13 @@ const listadoUser = async (req, res) => {
 };
 
 const userUpdate = async (req, res) => {
-  // Recoger info del usuario a actualizar
-  let userIdentity = req.user;
-  let userToUpdate = req.body;
+  // Recoger la info del usuario a actualizar
+  let userIdentidy = req.user;
 
+  // los datos que envia el usuario para actualizar
+  let userToUpdate = req.body;
   //Eliminar campos sobrantes
+
   delete userToUpdate.iat;
   delete userToUpdate.exp;
   delete userToUpdate.role;
@@ -236,17 +238,19 @@ const userUpdate = async (req, res) => {
 
   // Comprobar si el usuario existe
 
-  let userExist = await User.find({
+  let userExist = User.find({
     $or: [
       { email: userToUpdate.email.toLowerCase() },
       { nick: userToUpdate.nick.toLowerCase() },
     ],
   });
 
+
   let userIsset = false;
-  userExist.forEach((user) => {
+  userExist.forEach(user => {
     if (user && user._id != userIdentity.id) userIsset = true;
-  });
+});
+
 
   if (userIsset) {
     return res.status(404).json({
@@ -256,37 +260,33 @@ const userUpdate = async (req, res) => {
   }
   // Cifrar cobtraseña
   if (userToUpdate.password) {
-    let pwd = await bcrypt.hash(userToUpdate.password, 10);
-    userToUpdate.password = pwd;
-  } else {
+    let pwd = await bcrypt.hash(userToUpdate.password,10);
+    userToUpdate.password = pwd
+  }else{
     delete userToUpdate.password;
   }
-  // Buscar y actualizar
-  try {
-    let userUpdated = await User.findByIdAndUpdate(
-      { _id: userIdentity.id },
-      userToUpdate,
-      { new: true }
-    );
+    // Buscar y actualizar 
+    try {
+      let userUpdated = await User.findByIdAndUpdate({ _id: userIdentity.id }, userToUpdate, { new: true });
 
-    if (!userUpdated) {
-      return res
-        .status(400)
-        .json({ status: "error", message: "Error al actualizar" });
-    }
+      if (!userUpdated) {
+          return res.status(400).json({ status: "error", message: "Error al actualizar" });
+      }
 
-    // Devolver respuesta
-    return res.status(200).send({
-      status: "success",
-      message: "Metodo de actualizar usuario",
-      user: userUpdated,
-    });
+      // Devolver respuesta
+      return res.status(200).send({
+          status: "success",
+          message: "Metodo de actualizar usuario",
+          user: userUpdated
+      });
+
   } catch (error) {
-    return res.status(500).send({
-      status: "error",
-      message: "Error al actualizar",
-    });
+      return res.status(500).send({
+          status: "error",
+          message: "Error al actualizar",
+      });
   }
+
 };
 
 const upLoad = async (req, res) => {

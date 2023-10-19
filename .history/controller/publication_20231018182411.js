@@ -274,7 +274,7 @@ const feed = async (req, res) => {
     const myFollows = await FollowServices.followUserIds(req.user.id);
     console.log(myFollows);
     // Find a publicaiones pero utilizando el operardor "IN"
-    const publications = await Publication.find({user: myFollows.following}).populate("user", "-password -create_at -role -__v -email")
+    const publications = await Publication.find({user: myFollows.following}).populate("user", "-password -create_at -role -__V -email")
     .sort("-created_at")
     .paginate(page, itemsPerPage)
 

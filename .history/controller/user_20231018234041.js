@@ -236,13 +236,13 @@ const userUpdate = async (req, res) => {
 
   // Comprobar si el usuario existe
 
-  let userExist = await User.find({
+  let userExist = User.find({
     $or: [
       { email: userToUpdate.email.toLowerCase() },
       { nick: userToUpdate.nick.toLowerCase() },
     ],
   });
-
+console.log(userExist);
   let userIsset = false;
   userExist.forEach((user) => {
     if (user && user._id != userIdentity.id) userIsset = true;

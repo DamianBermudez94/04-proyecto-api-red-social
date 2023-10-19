@@ -227,7 +227,6 @@ const userUpdate = async (req, res) => {
   // Recoger info del usuario a actualizar
   let userIdentity = req.user;
   let userToUpdate = req.body;
-
   //Eliminar campos sobrantes
   delete userToUpdate.iat;
   delete userToUpdate.exp;
@@ -236,7 +235,7 @@ const userUpdate = async (req, res) => {
 
   // Comprobar si el usuario existe
 
-  let userExist = await User.find({
+  let userExist = User.find({
     $or: [
       { email: userToUpdate.email.toLowerCase() },
       { nick: userToUpdate.nick.toLowerCase() },

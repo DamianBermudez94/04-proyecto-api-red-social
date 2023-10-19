@@ -35,7 +35,7 @@ router.post(
   [userAuth.auth, uploads.single("file0")],
   userController.upLoad
 );
-router.get("/uploads/:fichero",userController.upDateImage);
+router.get("/uploads/:fichero", userAuth.auth, userController.upDateImage);
 router.get("/count/:id", userAuth.auth, userController.counter);
 
 /*router.get("/articulos/:ultimos?",userController.obtener);

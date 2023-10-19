@@ -242,7 +242,7 @@ const userUpdate = async (req, res) => {
       { nick: userToUpdate.nick.toLowerCase() },
     ],
   });
-
+console.log("hola",userExist);
   let userIsset = false;
   userExist.forEach((user) => {
     if (user && user._id != userIdentity.id) userIsset = true;
