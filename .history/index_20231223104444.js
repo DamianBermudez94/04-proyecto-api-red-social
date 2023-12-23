@@ -3,17 +3,14 @@ const express = require("express");
 
 const cors = require("cors");
 
+const env = require("dotenv")
 
-if (process.env.JWT_SECRET != 'production') {
-    require('dotenv').config({path:'./.env'})
-}
 // conectar base de datos
 conexion();
 
 // Creamos el servidor de Express
 const app = express();
-const puerto =  process.env.PORT || 3750;
-console.log(process.env.PORT);
+const puerto = process.env.PORT || 3750;
 // Arranca la app
 console.log("La app inicializo correctamente");
 
@@ -38,5 +35,5 @@ app.use("/api/follow/",routerFollow);
 
 // Crear servidor y escuchar las peticiones http
 app.listen(puerto,()=>{
-    console.log("Servidor red social conectado ",puerto);
+    console.log(`Servidor red social conectado ${puerto}`);
 })
