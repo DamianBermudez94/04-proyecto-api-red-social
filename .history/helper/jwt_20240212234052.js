@@ -1,10 +1,9 @@
-const jwt = require("jsonwebtoken");
+const jwt = require("jwt-simple");
 const moment = require("moment");
 
 // Clave secreta
-
 const secret = process.env.JWT_SECRET;
-console.log(secret);
+console.log("hola",secret);
 //Creamo una funcion para generar el token
 const createToken = (user)=>{
     const payload = {

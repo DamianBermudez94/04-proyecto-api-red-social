@@ -1,4 +1,3 @@
-import { NextRequest } from "next/server";
 
 export function middleware(req) {
   if (req.method == "OPTIONS") {
@@ -18,5 +17,5 @@ export function middleware(req) {
 }
 
 export const config = {
-  matcher: ["/api/:path*"],
+  matcher: ["/:path*"],
 };

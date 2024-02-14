@@ -1,9 +1,10 @@
 const jwt = require("jwt-simple");
+require('dotenv').config();
 const moment = require("moment");
 
 // Clave secreta
-const secret = "CLAVE_SECRETA_del_proyecto_RED_SOCIAL_987987";
-console.log(secret);
+const JWT_SECRET = process.env.JWT_SECRET;
+console.log("hola",JWT_SECRET);
 //Creamo una funcion para generar el token
 const createToken = (user)=>{
     const payload = {
@@ -19,11 +20,11 @@ const createToken = (user)=>{
 
     // Devolvemos el JWT Token codificado
     //Parametros: el objeto payload y la clave secreta
-    return jwt.encode(payload,secret)
+    return jwt.encode(payload,JWT_SECRET)
 }
 
 
 module.exports={
     createToken,
-    secret
+    JWT_SECRET
 }
