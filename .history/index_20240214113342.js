@@ -1,7 +1,10 @@
 const { conexion } = require("./database/conexion");
 const express = require("express");
+const bodyParser = require("body-parser");
 const cors = require("cors");
 require("dotenv").config();
+
+
 
 // conectar base de datos
 conexion();
@@ -9,23 +12,24 @@ conexion();
 // Creamos el servidor de Express
 const app = express();
 
+const corsOptions = {
+  origin: 'https://tudominio.com', // Reemplaza con tu dominio frontend
+  optionsSuccessStatus: 200, // Algunos navegadores antiguos (IE11) pueden tener problemas con 204
+};
 
-// Configura CORS
-app.use(cors());
-
-app.use(function (req, res, next) {
-  // Configura CORS
-  res.header('Access-Control-Allow-Origin', 'http://localhost:5173');
-  res.header('Access-Control-Allow-Methods', 'GET, POST, OPTIONS, PUT, PATCH, DELETE');
-  res.header('Access-Control-Allow-Headers', 'Origin, X-Requested-With, Content-Type, Accept');
-  res.header('Access-Control-Allow-Credentials', true);
-  next();
-});
-
+app.use(cors(corsOptions));
 
 
 // Arranca la app
-const PORT = process.env.PORT || 4500;
+const PORT = process.env.PORT || 3750;
+
+
+
+// Middleware para analizar el cuerpo de las solicitudes
+app.use(bodyParser.json());
+app.use(bodyParser.urlencoded({ extended: true }));
+
+
 
 // Convertir el body a un objeto JS // Recibo los datos con content-type aplication/json
 app.use(express.json());
