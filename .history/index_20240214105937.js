@@ -13,18 +13,19 @@ conexion();
 // Creamos el servidor de Express
 const app = express();
 
-// Configura CORS
-app.use(cors({
-  origin: 'https://mi-frontend.com', // Cambia esto con tu URL de frontend
-  methods: ['GET', 'POST', 'PUT', 'DELETE'],
-  allowedHeaders: ['Content-Type', 'Authorization'], // Agrega otros encabezados si es necesario
-  credentials: true, // Permite enviar cookies y encabezados de autorización
-}));
-
 // Arranca la app
 const PORT = process.env.PORT || 3750;
 
-
+// Middleware para permitir solicitudes CORS
+app.use((req, res, next) => {
+  res.header(
+    "Access-Control-Allow-Origin",
+    "https://frond-end-red-social.vercel.app"
+  );
+  res.header("Access-Control-Allow-Methods", "GET, POST, PUT, DELETE");
+  res.header("Access-Control-Allow-Headers", "Content-Type");
+  next();
+});
 
 // Middleware para analizar el cuerpo de las solicitudes
 app.use(bodyParser.json());
