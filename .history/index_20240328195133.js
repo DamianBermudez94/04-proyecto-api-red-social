@@ -14,7 +14,7 @@ app.use(cors());
 
 // Opciones de configuración de CORS
 const corsOptions = {
-  origin: '*',
+  origin: 'http://localhost:5174/',
   methods: ['GET', 'POST', 'PUT', 'DELETE'],
   allowedHeaders: ['Content-Type', 'Authorization']
 };

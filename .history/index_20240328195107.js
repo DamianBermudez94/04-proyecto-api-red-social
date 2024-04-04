@@ -14,7 +14,7 @@ app.use(cors());
 
 // Opciones de configuración de CORS
 const corsOptions = {
-  origin: '*',
+  origin: 'https://tufrontendenproduccion.com',
   methods: ['GET', 'POST', 'PUT', 'DELETE'],
   allowedHeaders: ['Content-Type', 'Authorization']
 };

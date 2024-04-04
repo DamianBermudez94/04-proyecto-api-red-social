@@ -152,7 +152,7 @@ const Login = async (req, res) => {
 const profileUser = async (req, res) => {
   try {
     //Buscar el id en la base de datos
-    let id = req.params.id;
+    let id = req.params._id;
     console.log(id);
     //Consulta para sacar el perfil del usuario
     const userProfile = await User.findById(id).select({

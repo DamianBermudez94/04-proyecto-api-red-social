@@ -9,25 +9,23 @@ conexion();
 // Creamos el servidor de Express
 const app = express();
 
+
 // Configura CORS
 app.use(cors());
 
-// Opciones de configuración de CORS
-const corsOptions = {
-  origin: '*',
-  methods: ['GET', 'POST', 'PUT', 'DELETE'],
-  allowedHeaders: ['Content-Type', 'Authorization']
-};
-app.use(cors(corsOptions));
-/*app.use(function (req, res, next) {
+app.use(function (req, res, next) {
   // Configura CORS
-  res.header('Access-Control-Allow-Origin', 'http://localhost:5174/');
+  res.header('Access-Control-Allow-Origin', 'http://localhost:5174');
   res.header('Access-Control-Allow-Methods', 'GET, POST, OPTIONS, PUT, PATCH, DELETE');
   res.header('Access-Control-Allow-Headers', 'Origin, X-Requested-With, Content-Type, Accept');
   res.header('Access-Control-Allow-Credentials', true);
   next();
-});*/
+});
 
+
+
+// Arranca la app
+const PORT = process.env.PORT || 4500;
 
 // Convertir el body a un objeto JS // Recibo los datos con content-type aplication/json
 app.use(express.json());
@@ -44,8 +42,6 @@ app.use("/api/user/", routerUser);
 app.use("/api/publication/", publicationUser);
 app.use("/api/follow/", routerFollow);
 
-// Arranca la app
-const PORT = process.env.PORT || 4500;
 // Crear servidor y escuchar las peticiones http
 app.listen(PORT, () => {
   console.log(`Servidor red social conectado ${PORT}`);

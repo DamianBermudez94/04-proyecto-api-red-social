@@ -9,7 +9,6 @@ const createToken = (user)=>{
     const payload = {
         id: user._id,
         name:user.name,
-        surname:user.surname,
         nick:user.nick,
         email:user.email,
         role:user.role,
@@ -20,7 +19,8 @@ const createToken = (user)=>{
 
     // Devolvemos el JWT Token codificado
     //Parametros: el objeto payload y la clave secreta
-    return jwt.encode(payload,JWT_SECRET)
+    const token = jwt.encode(payload,JWT_SECRET);
+    console.log(token);
 }
 
 

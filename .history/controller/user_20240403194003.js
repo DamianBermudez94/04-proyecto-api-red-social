@@ -10,7 +10,7 @@ const followServicie = require("../helper/FollowServices");
 const jwt = require("../helper/jwt");
 
 //Helper para validar datos
-const validate = require("../helper/validate")
+const validate = require("../helper/validate");
 
 // Libreria que sirve para cifrar contraseñas
 const bcrypt = require("bcrypt");
@@ -18,7 +18,6 @@ const bcrypt = require("bcrypt");
 const fs = require("fs");
 // Libreria que me permite cargar un ruta especifica
 const path = require("path");
-
 
 const userPrueba = (req, res) => {
   return res.status(200).json({
@@ -45,8 +44,8 @@ const crearUser = async (req, res) => {
     });
   }
   try {
-     // Validación avanzada
-  validate(parametros)
+    // Validación avanzada
+    validate(parametros);
   } catch (error) {
     return res.status(400).json({
       status: "error",
@@ -54,7 +53,7 @@ const crearUser = async (req, res) => {
         "No se han podido validar los datos del usuario,verificar los datos al enviar. Gracias!!",
     });
   }
- 
+
   //Chequear que no vengan usuarios duplicados
   //or: Condicion que sirve para comparar un valor yse tiene que cumplir una u otra condición
 
@@ -67,7 +66,7 @@ const crearUser = async (req, res) => {
 
   try {
     const resultsDuplicado = await userDuplicado.exec();
-    console.log(resultsDuplicado);
+    console.log("soy el usuario",resultsDuplicado);
     if (resultsDuplicado && resultsDuplicado.length >= 1) {
       return res.status(200).send({
         status: "succes",
@@ -116,7 +115,6 @@ const Login = async (req, res) => {
       .send({ error: "error", message: "Faltan datos por enviar" });
   }
 
-  
   // Buscar en la Base de datos si existe el usuario
   let user = await User.findOne({ email: params.email }).exec();
 
@@ -136,13 +134,13 @@ const Login = async (req, res) => {
 
   // Devolver el token
   token = jwt.createToken(user);
+
   return res.status(200).send({
     status: "success",
-    message: "Login",
+    message: "El usuario se ha logueado correctamente",
     user: {
-      id: user.id,
+      id: user,
       name: user.name,
-      surname:user.surname,
       nick: user.nick,
     },
     token,
@@ -152,10 +150,10 @@ const Login = async (req, res) => {
 const profileUser = async (req, res) => {
   try {
     //Buscar el id en la base de datos
-    let id = req.params.id;
-    console.log(id);
+    let userId = req.params.id;
+    console.log("Soy el id del usuario", userId);
     //Consulta para sacar el perfil del usuario
-    const userProfile = await User.findById(id).select({
+    const userProfile = await User.findById(userId).select({
       password: 0,
       role: 0,
     });
@@ -163,7 +161,7 @@ const profileUser = async (req, res) => {
     if (!userProfile) {
       return res.status(400).json({
         status: "error",
-        mensaje: "No se ha podido encontrado al usuario, por favor verificar los datos enviados",
+        mensaje: "No se ha podido encontrado al usuario...",
       });
     }
 
@@ -331,7 +329,8 @@ const upLoad = async (req, res) => {
     fs.unlink(req.file.path, (error) => {
       return res.status(404).json({
         status: "error",
-        mensaje: "El archivo subido no es valido, comprobar que sea una imagen",
+        mensaje:
+          "El archivo subido no es valido, comprobar que sea una imagen valida (png,jpg,jpeg,gif)",
       });
     });
   }

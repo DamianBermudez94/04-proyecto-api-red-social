@@ -152,7 +152,7 @@ const Login = async (req, res) => {
 const profileUser = async (req, res) => {
   try {
     //Buscar el id en la base de datos
-    let id = req.params.id;
+    let id = req.params._id;
     console.log(id);
     //Consulta para sacar el perfil del usuario
     const userProfile = await User.findById(id).select({
@@ -163,7 +163,7 @@ const profileUser = async (req, res) => {
     if (!userProfile) {
       return res.status(400).json({
         status: "error",
-        mensaje: "No se ha podido encontrado al usuario, por favor verificar los datos enviados",
+        mensaje: "No se han encontrado al usuario...",
       });
     }
 

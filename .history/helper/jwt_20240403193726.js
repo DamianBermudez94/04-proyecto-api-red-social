@@ -4,12 +4,12 @@ const moment = require("moment");
 
 // Clave secreta
 const JWT_SECRET = process.env.JWT_SECRET;
+console.log(JWT_SECRET);
 //Creamo una funcion para generar el token
 const createToken = (user)=>{
     const payload = {
         id: user._id,
         name:user.name,
-        surname:user.surname,
         nick:user.nick,
         email:user.email,
         role:user.role,

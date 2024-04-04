@@ -1,4 +1,6 @@
 const mongoose = require("mongoose");
+const conexionDB = process.env.MONGODB_URL;
+console.log(conexionDB);
 // función asincrona para poder capturar si tarda la conexion a la base de datos
 const conexion = async () => {
   try {

@@ -163,7 +163,7 @@ const profileUser = async (req, res) => {
     if (!userProfile) {
       return res.status(400).json({
         status: "error",
-        mensaje: "No se ha podido encontrado al usuario, por favor verificar los datos enviados",
+        mensaje: "No se han encontrado al usuario...",
       });
     }
 

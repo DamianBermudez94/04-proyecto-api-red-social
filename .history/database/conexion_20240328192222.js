@@ -1,12 +1,10 @@
 const mongoose = require("mongoose");
+
 // función asincrona para poder capturar si tarda la conexion a la base de datos
 const conexion = async () => {
   try {
     mongoose.set("strictQuery", false);
-    await mongoose.connect(process.env.MONGODB_URL, {
-      useNewUrlParser: true,
-      useUnifiedTopoLogy: true,
-    });
+    await mongoose.connect(process.env.MONGODB_URL);
     console.log("Base de datos conectada de forma exitosa");
     // Parametros dentro de objeto ( solo si falla la conexion )
     // useNewUrlParser:true

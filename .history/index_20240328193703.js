@@ -12,13 +12,7 @@ const app = express();
 // Configura CORS
 app.use(cors());
 
-// Opciones de configuración de CORS
-const corsOptions = {
-  origin: '*',
-  methods: ['GET', 'POST', 'PUT', 'DELETE'],
-  allowedHeaders: ['Content-Type', 'Authorization']
-};
-app.use(cors(corsOptions));
+
 /*app.use(function (req, res, next) {
   // Configura CORS
   res.header('Access-Control-Allow-Origin', 'http://localhost:5174/');
@@ -28,6 +22,15 @@ app.use(cors(corsOptions));
   next();
 });*/
 
+
+
+
+
+app.use(cors({
+  origin: 'http://localhost:5174/',
+  methods: ['GET', 'POST', 'PUT', 'DELETE'],
+  allowedHeaders: ['Content-Type', 'Authorization']
+}));
 
 // Convertir el body a un objeto JS // Recibo los datos con content-type aplication/json
 app.use(express.json());

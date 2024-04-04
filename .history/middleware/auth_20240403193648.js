@@ -4,7 +4,7 @@ const moment = require("moment");
 
 // Importar clave secreta
 const libjwt = require("../helper/jwt");
-const secret = libjwt.JWT_SECRET;
+const secret = libjwt.secret;
 
 // MIDDLEWERE de autenticacion
 
@@ -21,6 +21,7 @@ exports.auth = (req, res, next) => {
   //Decodificar el token
   try {
     let payload = jwt.decode(token, secret);
+   console.log("soy el token",payload);
     if (payload.exp <= moment().unix()) {
       return res.status(403).send({
         status: "Error",
