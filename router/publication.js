@@ -31,7 +31,7 @@ router.delete(
   publicationController.deletePublication
 );
 router.get(
-  "/publications/:id/:page?",
+  "/listPublication/:id/:page?",
   userAuth.auth,
   publicationController.listPublication
 );

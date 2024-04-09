@@ -56,8 +56,8 @@ const save = async (req, res) => {
 
   return res.status(200).json({
     status: "success",
-    mensaje: "Publicacion guardada",
-    publicationSave,
+    mensaje: "La publicación se ha creado correctamente",
+    publication:publicationSave,
   });
 };
 
@@ -274,6 +274,12 @@ const feed = async (req, res) => {
       .sort("-created_at")
       .skip((page - 1) * itemsPerPage)
       .limit(itemsPerPage);
+      if (publications.length === 0) {
+        return res.status(404).json({
+          status: "Error",
+          message: "No hay publicaciones disponibles, crear una publicación",
+        });
+      }
   
     // Responder con las publicaciones paginadas
     return res.status(200).json({
