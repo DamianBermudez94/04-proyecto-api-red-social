@@ -203,7 +203,7 @@ const upLoad = async (req, res) => {
     // Metodo findOneAndUpdate: sirve para editar/actulizar un elemento de la base de datos, le pasamos como parametros: el id del usuario y el de la publicacion,la imagen a actualizar
 
     let publicationUpdate = await Publication.findOneAndUpdate(
-      { user: req.user.id},
+      { user: req.user.id,_id:publicationId},
       { file: req.file.filename },
       {
         new: true,

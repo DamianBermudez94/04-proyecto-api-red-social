@@ -210,7 +210,7 @@ const upLoad = async (req, res) => {
         useFindAndModify: false,
       }
     );
-    console.log("soy la imagen que quiero actualizar", publicationUpdate);
+    console.log("soy la imagen que quiero actualizar", publicationUpdate.user);
     if (!publicationUpdate) {
       return res.status(400).json({
         status: "error",
